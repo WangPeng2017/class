@@ -1,5 +1,5 @@
 var mongoose = require('mongoose');
-require('express-mongoose');
+// require('express-mongoose');
 const db = mongoose.connect('mongodb://localhost/test').connection;
 
 // 实例化连接对象
@@ -16,8 +16,13 @@ var _User = new mongoose.Schema({
     password: String
 });
 
+//为Schema模型追加speak方法
+_User.methods.find = function(){
+    find
+    console.log('我的名字叫'+this.name);
+}
+
 // 创建model
 User = mongoose.model('User', _User);
-
 
 module.exports.User = User;

@@ -6,7 +6,9 @@ var User = require('../controller/db').User;
 router.get('/', function(req, res, next) {
   var user = new User({
     email: 'helloworld@qq.com',
-    name: 'helloworld'
+    name: 'helloworld',
+    id: 1,
+    age: 26
   });
   user.save();
   res.send('Data inited');
