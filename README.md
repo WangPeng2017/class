@@ -236,5 +236,5 @@
 
    贴图...
 
-   ![tu](D:\Users\wangpb\Desktop\QQ截图20170525091050.png)
+   ![Alt text](http://wx1.sinaimg.cn/mw1024/752603d5gy1ffxfo43p7wj20gu03qjr7.jpg)
 
