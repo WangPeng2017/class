@@ -19,6 +19,7 @@ module.exports = {
     entry: {
         index: './client/index.jsx',
         add: './client/add.jsx',
+        detail: './client/detail.jsx',
     },
     output: {
         //打包文件存放的绝对路径，html、css、js都会按这个路径打包

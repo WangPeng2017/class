@@ -8,7 +8,7 @@ db.once('open', (callback) => {
   console.log('MongoDB连接成功！！')
 });
 
-// 创建 注册用户schema
+// 创建 注册用户schemax   
 var _User = new mongoose.Schema({
     name: String,
     email: String,
@@ -24,8 +24,8 @@ var _Class = new mongoose.Schema({
 });
 
 // 创建model
-User = mongoose.model('User', _User);
-Class = mongoose.model('Class', _Class);
+var DBhandler = {};
+DBhandler.User = mongoose.model('User', _User);
+DBhandler.Class = mongoose.model('Class', _Class);
 
-module.exports.User = User;
-module.exports.Class = Class;
+module.exports.DBhandler = DBhandler;
