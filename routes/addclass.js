@@ -11,7 +11,7 @@ router.get('/', function(req, res, next) {
     age: 26
   });
   user.save();
-  res.send('Data inited');
+  res.render('add');
 });
 
 module.exports = router;

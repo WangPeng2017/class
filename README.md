@@ -1,8 +1,22 @@
 ##  										一个统计授课记录的demo
 
-#### 项目背景： 
+#### 项目思路： 
 
-​	。。。
+​	统计授课课时和进度的工具。
+
+​	数据存储结构为：
+
+```
+{
+  {
+    user
+  },
+  {}
+}
+
+```
+
+
 
 
 
@@ -121,6 +135,7 @@
    │
    ├── client
    │	├── component
+   │	├── add.jsx
    │   └── index.jsx
    │
    ├── controller
@@ -138,7 +153,7 @@
    └── views
        ├── error.ejs
        ├── index.ejs
-       └── layout.ejs
+       └── add.ejs
        
    ```
 
@@ -187,6 +202,7 @@
        // 页面入口文件
        entry: {
            index: './client/index.jsx', // 相对路径，打包前端部分jsx
+           add: './client/add.jsx',
        },
        output: {
            //打包文件存放的绝对路径，html、css、js都会按这个路径打包
@@ -219,7 +235,46 @@
    }
    ```
 
-7. 修改启动命令
+7. 视图模板中添加前端react引用
+
+   ````
+   index.ejs
+
+   <!DOCTYPE html>
+   <html>
+     <head>
+       <title>my class history</title>
+       <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0,minimal-ui" />
+       <link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+       <script src="//cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
+       <script type="text/javascript" src="//cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+   	// 引入react
+       <script type="text/javascript" src="./dist/vendor/react.min.js"></script>
+       <script type="text/javascript" src="/dist/vendor/react-dom.min.js"></script>
+       <script type="text/javascript">
+
+         var userInfo = {
+           name: '',
+           avatar: ''
+         }
+
+       </script>
+     </head>
+     <body>    
+     	<div id="root"></div>
+     	
+     	// 引入react组件压缩打包后的bundle文件
+       <script src="/dist/index.bundle.js"></script>
+     </body>
+   </html>
+
+
+   ````
+
+   ​
+
+8. 修改启动命令
 
    修改package.json中，script start 命令
 
@@ -232,7 +287,7 @@
      },
    ```
 
-8. 现在可以启动项目了！
+9. 现在可以启动项目了！
 
    贴图...
 
