@@ -19,11 +19,11 @@
      使用 `-h` 选项显示命令选项
 
          $ express -h
-         
+
            Usage: express [options][dir]
-         
+
            Options:
-         
+
          -h, --help          output usage information
              --version       output the version number
          -e, --ejs           add ejs engine support
@@ -70,19 +70,19 @@
          
      ````
 
-	4. 全局安装 nodemon 工具
+     4. 全局安装 nodemon 工具
 
-    ````
-    cnpm install -g nodemon
-    ````
+     ```
+     cnpm install -g nodemon
+     ```
 
-    安装完 nodemon 后，就可以使用 nodemon 热启动应用
+     安装完 nodemon 后，就可以使用 nodemon 热启动应用
 
-    ```
-    nodemon ./bin/www
-    ```
+     ```
+     nodemon ./bin/www
+     ```
 
-
+     ​
 
 #### 2.前端部分使用 webpack + react
 
@@ -98,20 +98,35 @@
    $ cnpm install webpack webpack-dev-server --save-dev //将webpack增加到开发依赖中
    ````
 
-3. 修改目录结构 (增加前端页面目录 client , 数据库服务目录 controller , 打包压缩后文件保存目录dis)
+3. ES6 --> ES5 转译器，安装babel
+
+   ```
+   $ cnpm install -g babel
+
+   $ cnpm install babel-core babel-loader --save-dev
+   ```
+
+   ​
+
+4. 修改目录结构 (增加前端页面目录 client , 数据库服务目录 controller , 打包压缩后文件保存目录dist)
 
    ```
    修改后目录结构为：
    .
    ├── app.js
+   ├── webpack.config.js
    ├── bin
    │   └── www
    ├── package.json
    │
+   ├── client
+   │	├── component
+   │   └── index.jsx
+   │
    ├── controller
    │	└── db.js
    │
-   ├── dis
+   ├── dist
    │   ├── vendor
    │	│	├── react.min.js
    │	│	└── react-dom.min.js
@@ -127,9 +142,29 @@
        
    ```
 
-   ​
+5. 使用react. 
 
-4. 根目录创建 webpack.config.js
+   * /dist/vendor/ 目录下引入 react.min.js、react-dom.min.js。
+
+   * /client/ 目录下创建 index.jsx 作为 ReactDOM.render 组件的入口
+
+     ```
+     /client/index.jsx
+
+     'use strict';
+     //import $ from 'zepto';
+     import React from 'react';
+     import ReactDOM from 'react-dom';
+
+     ReactDOM.render(
+         <h1>Hello React!!!</h1>,
+         document.getElementById('root')
+     );
+     ```
+
+     ​
+
+6. 根目录创建 webpack.config.js
 
    ```
    /*
@@ -151,7 +186,7 @@
    module.exports = {
        // 页面入口文件
        entry: {
-           index: './client/index.jsx', // 相对路径
+           index: './client/index.jsx', // 相对路径，打包前端部分jsx
        },
        output: {
            //打包文件存放的绝对路径，html、css、js都会按这个路径打包
@@ -184,34 +219,22 @@
    }
    ```
 
-   ​
+7. 修改启动命令
 
-   ​
+   修改package.json中，script start 命令
 
-#### 3. 前端构建 
+   ```
+   package.json
 
-​	**安装基础依赖** 
+   "scripts": {
+       "start": "webpack & nodemon ./bin/www",
+       "watch": "webpack -w"
+     },
+   ```
 
-​	// react 相关
+8. 现在可以启动项目了！
 
-​	$ cd app
+   贴图...
 
-​	$ cd app cnpm install react react-dom --save
+   ![tu](D:\Users\wangpb\Desktop\QQ截图20170525091050.png)
 
-
-
-​	// webpack 相关
-
-​	$ cnpm install webpack-dev-server webpack --save-dev
-
-​	$ cnpm install babel-loader babel-preset-es2015 babel-preset-stage-0 babel-preset-react babel-polyfill --save-dev
-
- 	
-
-​	// gulp 相关
-
-​	$ cnpm install gulpjs/gulp-cli -g
-
-​	$ cnpm install gulpjs/gulp.git#4.0 --save-dev
-
-​	$ npm install gulp-util del gulp-rename gulp-less gulp-connect connect-rest@1.9.5  --save-dev
