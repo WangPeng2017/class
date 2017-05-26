@@ -3,9 +3,15 @@
 //import $ from 'zepto';
 import React from 'react';
 import ReactDOM from 'react-dom';
+import Header from './component/header';
+import Home from './component/home';
+
 
 
 ReactDOM.render(
-    <h1>Hello React!!!</h1>,
+    <div>
+        <Header />
+        <Home />
+    </div>,
     document.getElementById('root')
 );

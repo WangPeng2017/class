@@ -5,7 +5,7 @@ const db = mongoose.connect('mongodb://localhost/test').connection;
 // 实例化连接对象
 db.on('error', console.error.bind(console, '连接错误：'));
 db.once('open', (callback) => {
-  console.log('MongoDB连接成功！！')
+    console.log('MongoDB连接成功！！')
 });
 
 // 创建 注册用户schemax   
@@ -24,8 +24,60 @@ var _Class = new mongoose.Schema({
 });
 
 // 创建model
-var DBhandler = {};
-DBhandler.User = mongoose.model('User', _User);
-DBhandler.Class = mongoose.model('Class', _Class);
+User = mongoose.model('User', _User);
+Class = mongoose.model('Class', _Class);
 
-module.exports.DBhandler = DBhandler;
+// CURE
+function addClass(req, res, next) {
+
+    var _user = new User(req.body.user); //相当于调用了Model.create(req.body)
+    _user.save(function(err, user) {
+        if (err) {
+            //doSomething...
+        } else {
+            //doSomething...
+        }
+    })
+}
+
+function deleteClass(req, res, next) {
+
+    var id = req.query._id;
+
+    User.remove({ _id: id }, function(err) {
+        if (err) {
+            //doSomething...
+        } else {
+            //doSomething...
+        }
+    })
+}
+
+function editClass(req, res, next) {
+
+    var id = req.body.id;
+    var userParams = req.body;
+
+    User.findById(id, function(err, user) {
+        if (err) {
+            //doSomething...
+        } else {
+            _user = _.extend(user, userParams);
+            _user.save(function(err, user) {
+                if (err) {
+                    //doSomething...
+                } else {
+                    //doSomething...
+                }
+            })
+        }
+    })
+}
+
+function getClasses(option) {
+    return Class.find(option, function(err, doc) {
+        res.send(doc);
+    })
+}
+
+module.exports = { User, Class, getClasses, editClass, deleteClass, addClass };
