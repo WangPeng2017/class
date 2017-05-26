@@ -17,5 +17,17 @@ router.post('/addclass', function(req, res, next) {
     });
 });
 
+router.post('/adduser', function(req, res, next) {
+    var newUser = req.body;
+    User.create(newUser, function(err, doc){
+        res.send(doc);
+    });
+});
+
+router.post('/verify', function(req, res, next) {
+    User.findOne(req.body, function(err, doc){
+        res.send(doc);
+    });
+})
 
 module.exports = router;

@@ -902,6 +902,181 @@ module.exports = canDefineProperty;
 
 /***/ }),
 
+/***/ 183:
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+function getCookie(cname) {
+  var name = cname + "=";
+  var ca = decodeURIComponent(document.cookie).split(';');
+  for (var i = 0; i < ca.length; i++) {
+    var c = ca[i];
+    while (c.charAt(0) == ' ') {
+      c = c.substring(1);
+    }if (c.indexOf(name) != -1) return c.substring(name.length, c.length);
+  }
+  return "";
+}
+
+function setCookie(name, value) {
+  var Days = 30;
+  var exp = new Date();
+  exp.setTime(exp.getTime() + Days * 24 * 60 * 60 * 1000);
+  document.cookie = name + "=" + escape(value) + ";expires=" + exp.toGMTString();
+}
+
+function Base64() {
+  // private property
+  var _keyStr = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
+
+  // public method for encoding
+  this.encode = function (input) {
+    var output = "";
+    var chr1, chr2, chr3, enc1, enc2, enc3, enc4;
+    var i = 0;
+    input = _utf8_encode(input);
+    while (i < input.length) {
+      chr1 = input.charCodeAt(i++);
+      chr2 = input.charCodeAt(i++);
+      chr3 = input.charCodeAt(i++);
+      enc1 = chr1 >> 2;
+      enc2 = (chr1 & 3) << 4 | chr2 >> 4;
+      enc3 = (chr2 & 15) << 2 | chr3 >> 6;
+      enc4 = chr3 & 63;
+      if (isNaN(chr2)) {
+        enc3 = enc4 = 64;
+      } else if (isNaN(chr3)) {
+        enc4 = 64;
+      }
+      output = output + _keyStr.charAt(enc1) + _keyStr.charAt(enc2) + _keyStr.charAt(enc3) + _keyStr.charAt(enc4);
+    }
+    return output;
+  };
+  // public method for decoding
+  this.decode = function (input) {
+    var output = "";
+    var chr1, chr2, chr3;
+    var enc1, enc2, enc3, enc4;
+    var i = 0;
+    input = input.replace(/[^A-Za-z0-9\+\/\=]/g, "");
+    while (i < input.length) {
+      enc1 = _keyStr.indexOf(input.charAt(i++));
+      enc2 = _keyStr.indexOf(input.charAt(i++));
+      enc3 = _keyStr.indexOf(input.charAt(i++));
+      enc4 = _keyStr.indexOf(input.charAt(i++));
+      chr1 = enc1 << 2 | enc2 >> 4;
+      chr2 = (enc2 & 15) << 4 | enc3 >> 2;
+      chr3 = (enc3 & 3) << 6 | enc4;
+      output = output + String.fromCharCode(chr1);
+      if (enc3 != 64) {
+        output = output + String.fromCharCode(chr2);
+      }
+      if (enc4 != 64) {
+        output = output + String.fromCharCode(chr3);
+      }
+    }
+    output = _utf8_decode(output);
+    return output;
+  };
+  // private method for UTF-8 encoding
+  var _utf8_encode = function _utf8_encode(string) {
+    string = string.replace(/\r\n/g, "\n");
+    var utftext = "";
+    for (var n = 0; n < string.length; n++) {
+      var c = string.charCodeAt(n);
+      if (c < 128) {
+        utftext += String.fromCharCode(c);
+      } else if (c > 127 && c < 2048) {
+        utftext += String.fromCharCode(c >> 6 | 192);
+        utftext += String.fromCharCode(c & 63 | 128);
+      } else {
+        utftext += String.fromCharCode(c >> 12 | 224);
+        utftext += String.fromCharCode(c >> 6 & 63 | 128);
+        utftext += String.fromCharCode(c & 63 | 128);
+      }
+    }
+    return utftext;
+  };
+  // private method for UTF-8 decoding
+  var _utf8_decode = function _utf8_decode(utftext) {
+    var string = "";
+    var i = 0;
+    var c = 0,
+        c1 = 0,
+        c2 = 0,
+        c3 = 0;
+    while (i < utftext.length) {
+      c = utftext.charCodeAt(i);
+      if (c < 128) {
+        string += String.fromCharCode(c);
+        i++;
+      } else if (c > 191 && c < 224) {
+        c2 = utftext.charCodeAt(i + 1);
+        string += String.fromCharCode((c & 31) << 6 | c2 & 63);
+        i += 2;
+      } else {
+        c2 = utftext.charCodeAt(i + 1);
+        c3 = utftext.charCodeAt(i + 2);
+        string += String.fromCharCode((c & 15) << 12 | (c2 & 63) << 6 | c3 & 63);
+        i += 3;
+      }
+    }
+    return string;
+  };
+}
+
+function getDevice() {
+  var u = navigator.userAgent;
+  return {
+    mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+    ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+    android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端
+    iPhone: u.indexOf('iPhone') > -1, //是否为iPhone
+    iPad: u.indexOf('iPad') > -1 //是否iPad
+  };
+}
+
+/*
+ * 验证Date对象
+ *
+ * @params {object} obj
+ * @return {Boolean}
+ */
+function isDate(obj) {
+  return '[object Date]' === Object.prototype.toString.call(obj);
+}
+function formatNum(e) {
+  return 10 > e ? '0' + e : e.toString();
+}
+/*
+ * 日期格式化 format -- 1970-01-01
+ *
+ * @param {Number | Date} date
+ * @return {String}
+ */
+function format(date, formatText) {
+  if (isDate(date) && !formatText) {} else if (date) {
+    date = new Date(date);
+  }
+
+  return date.getFullYear() + '-' + formatNum(date.getMonth() + 1) + '-' + formatNum(date.getDate());
+}
+
+var base64 = new Base64();
+
+exports.getCookie = getCookie;
+exports.setCookie = setCookie;
+exports.base64 = base64;
+exports.getDevice = getDevice;
+exports.format = format;
+
+/***/ }),
+
 /***/ 187:
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -910,17 +1085,153 @@ module.exports = canDefineProperty;
 
 //import $ from 'zepto';
 
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
 var _react = __webpack_require__(24);
 
 var _react2 = _interopRequireDefault(_react);
 
+var _utils = __webpack_require__(183);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-ReactDOM.render(_react2.default.createElement(
-  'div',
-  null,
-  '111111'
-), document.getElementById('root'));
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var Login = function (_Component) {
+    _inherits(Login, _Component);
+
+    function Login(props) {
+        _classCallCheck(this, Login);
+
+        var _this = _possibleConstructorReturn(this, (Login.__proto__ || Object.getPrototypeOf(Login)).call(this, props));
+
+        _this.state = {
+            insertData: false,
+            name: '',
+            progress: ''
+        };
+        _this.submitData = {};
+
+        _this.submitUser = _this.submitUser.bind(_this);
+        _this.changeName = _this.changeName.bind(_this);
+        _this.changePassWord = _this.changePassWord.bind(_this);
+        return _this;
+    }
+
+    _createClass(Login, [{
+        key: 'changeName',
+        value: function changeName(event) {
+            var value = event.target.value;
+            this.setState({
+                name: value
+            });
+        }
+    }, {
+        key: 'changePassWord',
+        value: function changePassWord(event) {
+            var value = event.target.value;
+            this.setState({
+                password: value
+            });
+        }
+    }, {
+        key: 'submitUser',
+        value: function submitUser() {
+            var name = $('#name').val();
+            var progress = $('#progress').val();
+            if (name === '') {
+                return false;
+            }
+
+            var submitData = {
+                name: this.state.name,
+                password: this.state.password,
+                email: '暂无'
+            };
+            $.ajax({
+                type: 'POST',
+                url: '/api/verify',
+                async: true,
+                contentType: 'application/json;chartset=utf-8',
+                data: JSON.stringify(submitData),
+                dataType: 'json',
+                success: function (data) {
+                    console.log(data);
+                    if (data && data.length !== 0) {
+                        (0, _utils.setCookie)('userName', data.name);
+                        window.location.href = '/add';
+                    }
+                }.bind(this)
+            });
+        }
+    }, {
+        key: 'render',
+        value: function render() {
+            return _react2.default.createElement(
+                'div',
+                { className: 'container', style: { 'marginTop': '100px' } },
+                _react2.default.createElement(
+                    'form',
+                    { className: 'form-horizontal' },
+                    _react2.default.createElement(
+                        'div',
+                        { className: 'form-group' },
+                        _react2.default.createElement(
+                            'label',
+                            { htmlFor: 'name', className: 'col-sm-2 control-label' },
+                            '\u7528\u6237\u540D\uFF1A'
+                        ),
+                        _react2.default.createElement(
+                            'div',
+                            { className: 'col-sm-10', style: { 'color': '#a94442' } },
+                            _react2.default.createElement('input', { type: 'text', className: 'form-control', id: 'name', placeholder: '\u8BF7\u8F93\u5165\u7528\u6237\u540D', onChange: this.changeName })
+                        )
+                    ),
+                    _react2.default.createElement(
+                        'div',
+                        { className: 'form-group' },
+                        _react2.default.createElement(
+                            'label',
+                            { htmlFor: 'password', className: 'col-sm-2 control-label' },
+                            '\u5BC6\u7801\uFF1A'
+                        ),
+                        _react2.default.createElement(
+                            'div',
+                            { className: 'col-sm-10' },
+                            _react2.default.createElement('input', { type: 'password', className: 'form-control', id: 'password', placeholder: '\u8BF7\u8F93\u5165\u5BC6\u7801', onChange: this.changePassWord })
+                        )
+                    ),
+                    _react2.default.createElement(
+                        'div',
+                        { className: 'form-group' },
+                        _react2.default.createElement(
+                            'div',
+                            { className: 'col-sm-10 col-sm-offset-2' },
+                            _react2.default.createElement(
+                                'button',
+                                {
+                                    type: 'button',
+                                    className: 'btn btn-success btn-lg btn-block',
+                                    disabled: this.state.name === '' || this.state.password === '' && 'true',
+                                    onClick: this.submitUser
+                                },
+                                '\u767B\u5F55'
+                            )
+                        )
+                    )
+                )
+            );
+        }
+    }]);
+
+    return Login;
+}(_react.Component);
+
+ReactDOM.render(_react2.default.createElement(Login, null), document.getElementById('root'));
 
 /***/ }),
 

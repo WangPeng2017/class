@@ -4,7 +4,7 @@ var router = express.Router();
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('index');
+    res.render('index');
 });
 
 router.get('/regist', function(req, res, next) {
@@ -16,7 +16,7 @@ router.get('/login', function(req, res, next) {
 });
 
 router.get('/add', function(req, res, next) {
-  res.render('add');
+    res.render('add');
 });
 
 router.get('/detail', function(req, res, next) {

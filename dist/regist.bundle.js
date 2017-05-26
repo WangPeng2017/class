@@ -910,17 +910,151 @@ module.exports = canDefineProperty;
 
 //import $ from 'zepto';
 
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
 var _react = __webpack_require__(24);
 
 var _react2 = _interopRequireDefault(_react);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-ReactDOM.render(_react2.default.createElement(
-  'div',
-  null,
-  '111111'
-), document.getElementById('root'));
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var Regist = function (_Component) {
+    _inherits(Regist, _Component);
+
+    function Regist(props) {
+        _classCallCheck(this, Regist);
+
+        var _this = _possibleConstructorReturn(this, (Regist.__proto__ || Object.getPrototypeOf(Regist)).call(this, props));
+
+        _this.state = {
+            insertData: false,
+            name: '',
+            progress: ''
+        };
+        _this.submitData = {};
+
+        _this.submitUser = _this.submitUser.bind(_this);
+        _this.changeName = _this.changeName.bind(_this);
+        _this.changePassWord = _this.changePassWord.bind(_this);
+        return _this;
+    }
+
+    _createClass(Regist, [{
+        key: 'changeName',
+        value: function changeName(event) {
+            var value = event.target.value;
+            this.setState({
+                name: value
+            });
+        }
+    }, {
+        key: 'changePassWord',
+        value: function changePassWord(event) {
+            var value = event.target.value;
+            this.setState({
+                password: value
+            });
+        }
+    }, {
+        key: 'submitUser',
+        value: function submitUser() {
+            var name = $('#name').val();
+            var progress = $('#progress').val();
+            if (name === '') {
+
+                return false;
+            }
+
+            var submitData = {
+                name: this.state.name,
+                password: this.state.password,
+                email: '暂无'
+            };
+            $.ajax({
+                type: 'POST',
+                url: '/api/adduser',
+                async: true,
+                contentType: 'application/json;chartset=utf-8',
+                data: JSON.stringify(submitData),
+                dataType: 'json',
+                success: function (data) {
+                    console.log(data);
+                    if (data && data.length !== 0) {
+                        window.location.href = '/';
+                    }
+                }.bind(this)
+            });
+        }
+    }, {
+        key: 'render',
+        value: function render() {
+            return _react2.default.createElement(
+                'div',
+                { className: 'container', style: { 'marginTop': '100px' } },
+                _react2.default.createElement(
+                    'form',
+                    { className: 'form-horizontal' },
+                    _react2.default.createElement(
+                        'div',
+                        { className: 'form-group' },
+                        _react2.default.createElement(
+                            'label',
+                            { htmlFor: 'name', className: 'col-sm-2 control-label' },
+                            '\u7528\u6237\u540D\uFF1A'
+                        ),
+                        _react2.default.createElement(
+                            'div',
+                            { className: 'col-sm-10', style: { 'color': '#a94442' } },
+                            _react2.default.createElement('input', { type: 'text', className: 'form-control', id: 'name', placeholder: '\u8BF7\u8F93\u5165\u7528\u6237\u540D', onChange: this.changeName })
+                        )
+                    ),
+                    _react2.default.createElement(
+                        'div',
+                        { className: 'form-group' },
+                        _react2.default.createElement(
+                            'label',
+                            { htmlFor: 'password', className: 'col-sm-2 control-label' },
+                            '\u5BC6\u7801\uFF1A'
+                        ),
+                        _react2.default.createElement(
+                            'div',
+                            { className: 'col-sm-10' },
+                            _react2.default.createElement('input', { type: 'password', className: 'form-control', id: 'password', placeholder: '\u8BF7\u8F93\u5165\u5BC6\u7801', onChange: this.changePassWord })
+                        )
+                    ),
+                    _react2.default.createElement(
+                        'div',
+                        { className: 'form-group' },
+                        _react2.default.createElement(
+                            'div',
+                            { className: 'col-sm-10 col-sm-offset-2' },
+                            _react2.default.createElement(
+                                'button',
+                                {
+                                    type: 'button',
+                                    className: 'btn btn-success btn-lg btn-block',
+                                    disabled: this.state.name === '' || this.state.password === '' && 'true',
+                                    onClick: this.submitUser
+                                },
+                                'Submit'
+                            )
+                        )
+                    )
+                )
+            );
+        }
+    }]);
+
+    return Regist;
+}(_react.Component);
+
+ReactDOM.render(_react2.default.createElement(Regist, null), document.getElementById('root'));
 
 /***/ }),
 
