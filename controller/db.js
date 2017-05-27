@@ -1,6 +1,12 @@
 var mongoose = require('mongoose');
-// require('express-mongoose');
-const db = mongoose.connect('mongodb://localhost/test').connection;
+
+var serverConf = require('../serverConfig');
+var dbUrl = serverConf.devConfig.DB_URL;
+console.log(process.env.NODE_ENV);
+
+if (process.env.NODE_ENV === 'production') dbUrl = serverConf.prdConfig.DB_URL;
+
+const db = mongoose.connect(dbUrl).connection;
 
 // 实例化连接对象
 db.on('error', console.error.bind(console, '连接错误：'));
