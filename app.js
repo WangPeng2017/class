@@ -10,8 +10,7 @@ var index = require('./routes/index');
 var api = require('./routes/api/api');
 
 var app = express();
-//产品模式运行
-app.set('env', 'production');
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');

@@ -1,7 +1,7 @@
 var mongoose = require('mongoose');
 
 var serverConf = require('../serverConfig');
-var dbUrl = serverConf.prdConfig.DB_URL;
+var dbUrl = serverConf.devConfig.DB_URL;
 
 const db = mongoose.connect(dbUrl).connection;
 
@@ -30,57 +30,4 @@ var _Class = new mongoose.Schema({
 User = mongoose.model('User', _User);
 Class = mongoose.model('Class', _Class);
 
-// CURE
-function addClass(req, res, next) {
-
-    var _user = new User(req.body.user); //相当于调用了Model.create(req.body)
-    _user.save(function(err, user) {
-        if (err) {
-            //doSomething...
-        } else {
-            //doSomething...
-        }
-    })
-}
-
-function deleteClass(req, res, next) {
-
-    var id = req.query._id;
-
-    User.remove({ _id: id }, function(err) {
-        if (err) {
-            //doSomething...
-        } else {
-            //doSomething...
-        }
-    })
-}
-
-function editClass(req, res, next) {
-
-    var id = req.body.id;
-    var userParams = req.body;
-
-    User.findById(id, function(err, user) {
-        if (err) {
-            //doSomething...
-        } else {
-            _user = _.extend(user, userParams);
-            _user.save(function(err, user) {
-                if (err) {
-                    //doSomething...
-                } else {
-                    //doSomething...
-                }
-            })
-        }
-    })
-}
-
-function getClasses(option) {
-    return Class.find(option, function(err, doc) {
-        res.send(doc);
-    })
-}
-
-module.exports = { User, Class, getClasses, editClass, deleteClass, addClass };
+module.exports = { User, Class };
