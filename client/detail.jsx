@@ -71,7 +71,7 @@ class TableDetail extends React.Component {
 ReactDOM.render(
     <div>
         <Header />
-        <Welcome userName={userName}/>
+        <Welcome userName={userName} />
         <TableDetail userName={userName}/>
     </div>
     ,document.getElementById('root')
