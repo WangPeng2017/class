@@ -26,6 +26,7 @@ router.post('/adduser', function(req, res, next) {
 
 router.post('/verify', function(req, res, next) {
     User.findOne(req.body, function(err, doc){
+        req.session.user = req.body.name;
         res.send(doc);
     });
 })

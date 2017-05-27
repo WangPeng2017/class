@@ -6,11 +6,10 @@ import ReactDOM from 'react-dom';
 import { format } from './lib/utils.jsx';
 
 import Header from './component/header';
-
-let username = '许静静';
+import Welcome from './component/welcome';
+const userName = userInfo.name;
 
 class TableDetail extends React.Component {
-
     constructor(props){
         super(props);
         this.state = {
@@ -18,7 +17,7 @@ class TableDetail extends React.Component {
         }
     }
     componentDidMount() {
-        this.fetchDetail(username);
+        this.fetchDetail(this.props.userName);
     }
     fetchDetail(userName){
         $.ajax({
@@ -38,7 +37,7 @@ class TableDetail extends React.Component {
             }
           }.bind(this)
         });
-      }
+    }
     render() {
         return (
             <div className="container">
@@ -69,24 +68,11 @@ class TableDetail extends React.Component {
     }
 }
 
-class Title extends React.Component {
-    render() {
-        return (
-            <div className="jumbotron">
-              <div className="container">
-                <h1 style={{'textAlign':'center'}}>Hello, { username }!</h1>
-                <p></p>
-              </div>
-            </div>
-        )
-    }
-}
-
 ReactDOM.render(
     <div>
         <Header />
-        <Title />
-        <TableDetail />
+        <Welcome userName={userName}/>
+        <TableDetail userName={userName}/>
     </div>
     ,document.getElementById('root')
 );

@@ -11844,8 +11844,6 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var username = 'helloworld';
-
 var Header = function (_Component) {
   _inherits(Header, _Component);
 
@@ -11919,6 +11917,15 @@ var Header = function (_Component) {
                   'a',
                   { href: '/detail' },
                   '\u7EDF\u8BA1'
+                )
+              ),
+              React.createElement(
+                'li',
+                null,
+                React.createElement(
+                  'a',
+                  { href: '/logout' },
+                  '\u767B\u51FA'
                 )
               )
             )
@@ -22153,8 +22160,6 @@ module.exports = getNextDebugID;
 "use strict";
 
 
-// import $ from 'zepto';
-
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _react = __webpack_require__(24);
@@ -22174,6 +22179,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var userName = userInfo.name;
 
 var InputNewClass = function (_Component) {
     _inherits(InputNewClass, _Component);
@@ -22218,15 +22225,13 @@ var InputNewClass = function (_Component) {
             var name = $('#name').val();
             var progress = $('#progress').val();
             if (name === '') {
-
                 return false;
             }
-
             var submitData = {
                 name: this.state.name,
                 progress: this.state.progress,
                 date: new Date(),
-                userName: '许静静'
+                userName: this.props.userName
             };
             $.ajax({
                 type: 'POST',
@@ -22238,6 +22243,8 @@ var InputNewClass = function (_Component) {
                 success: function (data) {
                     console.log(data);
                     data && data.length !== 0 && this.setState({ insertData: true });
+                    $('#name').val('');
+                    $('#progress').val('');
                     var t = setTimeout(function () {
                         this.setState({ insertData: false, name: '', progress: '' });
                     }.bind(this), 1000);
@@ -22249,56 +22256,60 @@ var InputNewClass = function (_Component) {
         value: function render() {
             return React.createElement(
                 'div',
-                { className: 'container', style: { 'marginTop': '100px' } },
+                null,
+                this.state.insertData && React.createElement(
+                    'div',
+                    { className: 'alert alert-success', role: 'alert', style: { 'textAlign': 'center', 'position': 'fixed', 'width': '100%' } },
+                    '\u63D2\u5165\u6210\u529F\uFF01'
+                ),
                 React.createElement(
-                    'form',
-                    { className: 'form-horizontal' },
+                    'div',
+                    { className: 'container', style: { 'top': '100px', 'position': 'relative', 'width': '100%' } },
                     React.createElement(
-                        'div',
-                        { className: 'form-group' },
-                        React.createElement(
-                            'label',
-                            { htmlFor: 'name', className: 'col-sm-2 control-label' },
-                            '\u5B66\u751F\u59D3\u540D\uFF1A'
-                        ),
+                        'form',
+                        { className: 'form-horizontal' },
                         React.createElement(
                             'div',
-                            { className: 'col-sm-10', style: { 'color': '#a94442' } },
-                            React.createElement('input', { type: 'name', className: 'form-control', id: 'name', placeholder: '\u8BF7\u8F93\u5165\u5B66\u751F\u59D3\u540D', onChange: this.changeName })
-                        )
-                    ),
-                    React.createElement(
-                        'div',
-                        { className: 'form-group' },
-                        React.createElement(
-                            'label',
-                            { htmlFor: 'progress', className: 'col-sm-2 control-label' },
-                            '\u8BFE\u7A0B\u8FDB\u5EA6\uFF1A'
-                        ),
-                        React.createElement(
-                            'div',
-                            { className: 'col-sm-10' },
-                            React.createElement('input', { type: 'text', className: 'form-control', id: 'progress', placeholder: '\u8BF7\u8F93\u5165\u8BFE\u7A0B\u8FDB\u5EA6', onChange: this.changeProgress })
-                        )
-                    ),
-                    React.createElement(
-                        'div',
-                        { className: 'form-group' },
-                        React.createElement(
-                            'div',
-                            { className: 'col-sm-10 col-sm-offset-2' },
+                            { className: 'form-group' },
                             React.createElement(
-                                'button',
-                                { type: 'button', className: 'btn btn-success btn-lg btn-block', disabled: this.state.name === '' && 'true', onClick: this.submitClass },
-                                'Submit'
+                                'label',
+                                { htmlFor: 'name', className: 'col-sm-2 control-label' },
+                                '\u5B66\u751F\u59D3\u540D\uFF1A'
+                            ),
+                            React.createElement(
+                                'div',
+                                { className: 'col-sm-10', style: { 'color': '#a94442' } },
+                                React.createElement('input', { type: 'name', className: 'form-control', id: 'name', placeholder: '\u8BF7\u8F93\u5165\u5B66\u751F\u59D3\u540D', onChange: this.changeName })
+                            )
+                        ),
+                        React.createElement(
+                            'div',
+                            { className: 'form-group' },
+                            React.createElement(
+                                'label',
+                                { htmlFor: 'progress', className: 'col-sm-2 control-label' },
+                                '\u8BFE\u7A0B\u8FDB\u5EA6\uFF1A'
+                            ),
+                            React.createElement(
+                                'div',
+                                { className: 'col-sm-10' },
+                                React.createElement('input', { type: 'text', className: 'form-control', id: 'progress', placeholder: '\u8BF7\u8F93\u5165\u8BFE\u7A0B\u8FDB\u5EA6', onChange: this.changeProgress })
+                            )
+                        ),
+                        React.createElement(
+                            'div',
+                            { className: 'form-group' },
+                            React.createElement(
+                                'div',
+                                { className: 'col-sm-10 col-sm-offset-2' },
+                                React.createElement(
+                                    'button',
+                                    { type: 'button', className: 'btn btn-success btn-lg btn-block', disabled: this.state.name === '' && 'true', onClick: this.submitClass },
+                                    'Submit'
+                                )
                             )
                         )
                     )
-                ),
-                this.state.insertData && React.createElement(
-                    'div',
-                    { className: 'alert alert-success', role: 'alert', style: { 'marginTop': '40px', 'textAlign': 'center' } },
-                    '\u63D2\u5165\u6210\u529F\uFF01'
                 )
             );
         }
@@ -22311,7 +22322,7 @@ _reactDom2.default.render(React.createElement(
     'div',
     null,
     React.createElement(_header2.default, null),
-    React.createElement(InputNewClass, null)
+    React.createElement(InputNewClass, { userName: userName })
 ), document.getElementById('root'));
 
 /***/ })

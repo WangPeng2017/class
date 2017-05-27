@@ -1,5 +1,10 @@
 <%- include('header') -%>
     <div id="root"></div>
+    <script type="text/javascript">
+      var userInfo = {
+        name: '<%= userName %>',
+      }
+    </script>
     <script src="/dist/detail.bundle.js"></script>
 <%- include('footer') -%>
 
