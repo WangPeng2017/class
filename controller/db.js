@@ -1,10 +1,7 @@
 var mongoose = require('mongoose');
 
 var serverConf = require('../serverConfig');
-var dbUrl = serverConf.devConfig.DB_URL;
-console.log(process.env.NODE_ENV);
-
-if (process.env.NODE_ENV === 'production') dbUrl = serverConf.prdConfig.DB_URL;
+var dbUrl = serverConf.prdConfig.DB_URL;
 
 const db = mongoose.connect(dbUrl).connection;
 
