@@ -5,5 +5,6 @@ exports.devConfig = {
 
 exports.prdConfig = {
 	CDN_URL: 'https://yourclass.herokuapp.com',
-	DB_URL: 'mongodb://heroku_n3krjlv2:7r1lu1a9dlhki6v1lei9sfpi8q@ds155811.mlab.com:55811/heroku_n3krjlv2'
+	DB_URL: 'mongodb://heroku_2brw4qcl:b7a7d2ck8t72ou44eg6knb0jc1@ds155411.mlab.com:55411/heroku_2brw4qcl'
 }
+
