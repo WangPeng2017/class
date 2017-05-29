@@ -21,14 +21,16 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(session({ 
+app.use(session({
     secret: 'secret',
     cookie:{ 
         maxAge: 1000*60*60*24*365
-    }
+    },
+    saveUninitialized: true,
+    resave: true
 }));
 
-app.use(function(req,res,next){ 
+app.use(function(req,res,next){
     res.locals.user = req.session.user;   // 从session 获取 user对象
     var err = req.session.error;   //获取错误信息
     delete req.session.error;
