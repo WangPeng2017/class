@@ -10,11 +10,25 @@ router.post('/getdetail', function(req, res, next) {
     });
 });
 
+router.post('/removedetail', function(req, res, next) {
+    Class.remove(req.body, function (err, doc) {
+      if (err) return handleError(err);
+      res.send(doc);
+    });
+});
+
+
 router.post('/addclass', function(req, res, next) {
     var newClass = req.body;
-    Class.create(newClass, function(err, doc){
+    if(req.body.id){
+        Class.findOneAndUpdate({_id: req.body.id}, { $set: req.body}, function(err, doc){
+            res.send(doc);
+        })
+    }else{
+        Class.create(newClass, function(err, doc){
         res.send(doc);
     });
+    }
 });
 
 router.post('/adduser', function(req, res, next) {

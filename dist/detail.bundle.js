@@ -809,11 +809,11 @@ function isNative(fn) {
   var hasOwnProperty = Object.prototype.hasOwnProperty;
   var reIsNative = RegExp('^' + funcToString
   // Take an example native function source for comparison
-  .call(hasOwnProperty)
+  .call(hasOwnProperty
   // Strip regex characters so we can use it for regex
-  .replace(/[\\^$.*+?()[\]{}|]/g, '\\$&')
+  ).replace(/[\\^$.*+?()[\]{}|]/g, '\\$&'
   // Remove hasOwnProperty from the template to make it generic
-  .replace(/hasOwnProperty|(function).*?(?=\\\()| for .+?(?=\\\])/g, '$1.*?') + '$');
+  ).replace(/hasOwnProperty|(function).*?(?=\\\()| for .+?(?=\\\])/g, '$1.*?') + '$');
   try {
     var source = funcToString.call(fn);
     return reIsNative.test(source);
@@ -22391,8 +22391,6 @@ exports.format = format;
 "use strict";
 
 
-//import $ from 'zepto';
-
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _react = __webpack_require__(24);
@@ -22413,6 +22411,10 @@ var _welcome = __webpack_require__(182);
 
 var _welcome2 = _interopRequireDefault(_welcome);
 
+var _inputNewClass = __webpack_require__(190);
+
+var _inputNewClass2 = _interopRequireDefault(_inputNewClass);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -22424,125 +22426,425 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var userName = userInfo.name;
 
 var TableDetail = function (_React$Component) {
-    _inherits(TableDetail, _React$Component);
+  _inherits(TableDetail, _React$Component);
 
-    function TableDetail(props) {
-        _classCallCheck(this, TableDetail);
+  function TableDetail(props) {
+    _classCallCheck(this, TableDetail);
 
-        var _this = _possibleConstructorReturn(this, (TableDetail.__proto__ || Object.getPrototypeOf(TableDetail)).call(this, props));
+    var _this = _possibleConstructorReturn(this, (TableDetail.__proto__ || Object.getPrototypeOf(TableDetail)).call(this, props));
+
+    _this.state = {
+      studentsList: [],
+      renderAgain: false
+    };
+
+    _this.update = _this.update.bind(_this);
+    _this.delete = _this.delete.bind(_this);
+    _this.fetchRead = _this.fetchRead.bind(_this);
+    _this.fetchRemove = _this.fetchRemove.bind(_this);
+    return _this;
+  }
+
+  _createClass(TableDetail, [{
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      this.fetchRead(this.props.userName);
+    }
+  }, {
+    key: 'update',
+    value: function update(e) {
+      console.log('change');
+      var tar = e.target;
+      var studentName = $(tar).parents('tr').find('.name').html();
+      var progress = $(tar).parents('tr').find('.progress').html();
+      var date = $(tar).parents('tr').find('.date').html();
+      var id = $(tar).parents('tr').attr('data-id');
+      this.setState({
+        studentName: studentName,
+        progress: progress,
+        date: date,
+        id: id
+      });
+    }
+  }, {
+    key: 'delete',
+    value: function _delete(e) {
+      var tar = e.target;
+      var id = $(tar).parents('tr').attr('data-id');
+      this.fetchRemove(id);
+    }
+  }, {
+    key: 'fetchRemove',
+    value: function fetchRemove(id) {
+      $.ajax({
+        type: 'POST',
+        url: '/api/removedetail',
+        async: true,
+        contentType: "application/json;charset=utf-8",
+        data: JSON.stringify({ '_id': id }),
+        dataType: 'json',
+        success: function (data) {
+          if (data && data.length !== 0) {
+            // 从后台重新获取数据
+            this.fetchRead(this.props.userName);
+          }
+        }.bind(this)
+      });
+    }
+  }, {
+    key: 'fetchRead',
+    value: function fetchRead(userName) {
+      $.ajax({
+        type: 'POST',
+        url: '/api/getdetail',
+        async: true,
+        contentType: "application/json;charset=utf-8",
+        data: JSON.stringify({ 'userName': userName }),
+        dataType: 'json',
+        success: function (data) {
+          if (data && data.length !== 0) {
+            this.setState({
+              studentsList: data
+            });
+          } else {}
+        }.bind(this)
+      });
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      var _this2 = this;
+
+      var userName = userInfo.name;
+      return _react2.default.createElement(
+        'div',
+        { className: 'container' },
+        _react2.default.createElement(
+          'table',
+          { className: 'table table-bordered table-striped' },
+          _react2.default.createElement(
+            'thead',
+            null,
+            _react2.default.createElement(
+              'tr',
+              null,
+              _react2.default.createElement(
+                'td',
+                null,
+                '#'
+              ),
+              _react2.default.createElement(
+                'td',
+                null,
+                '\u5B66\u751F\u59D3\u540D'
+              ),
+              _react2.default.createElement(
+                'td',
+                null,
+                '\u4E0A\u8BFE\u65E5\u671F'
+              ),
+              _react2.default.createElement(
+                'td',
+                null,
+                '\u8BFE\u7A0B\u8FDB\u5EA6'
+              ),
+              _react2.default.createElement(
+                'td',
+                null,
+                '\u64CD\u4F5C'
+              )
+            )
+          ),
+          _react2.default.createElement(
+            'tbody',
+            null,
+            this.state.studentsList && this.state.studentsList.map(function (item, key) {
+              return _react2.default.createElement(
+                'tr',
+                { key: key, 'data-id': item._id },
+                _react2.default.createElement(
+                  'td',
+                  null,
+                  key
+                ),
+                _react2.default.createElement(
+                  'td',
+                  { className: 'name' },
+                  item.name
+                ),
+                _react2.default.createElement(
+                  'td',
+                  { className: 'date' },
+                  (0, _utils.format)(item.date).slice(5)
+                ),
+                _react2.default.createElement(
+                  'td',
+                  { className: 'progress' },
+                  item.progress
+                ),
+                _react2.default.createElement(
+                  'td',
+                  null,
+                  _react2.default.createElement(
+                    'button',
+                    {
+                      type: 'button',
+                      className: 'btn btn-primary btn-xs',
+                      style: { margin: '5px' },
+                      'data-toggle': 'modal',
+                      'data-target': '#myModal',
+                      onClick: _this2.update
+                    },
+                    '\u7F16\u8F91'
+                  ),
+                  _react2.default.createElement(
+                    'button',
+                    {
+                      type: 'button',
+                      style: { margin: '5px' },
+                      className: 'btn btn-primary btn-xs',
+                      onClick: _this2.delete
+                    },
+                    '\u5220\u9664'
+                  )
+                )
+              );
+            })
+          )
+        ),
+        _react2.default.createElement(
+          'div',
+          { className: 'modal fade', id: 'myModal', tabIndex: '-1', role: 'dialog', 'aria-labelledby': 'myModalLabel' },
+          _react2.default.createElement(
+            'div',
+            { className: 'modal-dialog', role: 'document' },
+            _react2.default.createElement(
+              'div',
+              { className: 'modal-content' },
+              _react2.default.createElement(
+                'div',
+                { className: 'modal-header' },
+                _react2.default.createElement(
+                  'button',
+                  { type: 'button', className: 'close', 'data-dismiss': 'modal', 'aria-label': 'Close' },
+                  _react2.default.createElement(
+                    'span',
+                    { 'aria-hidden': 'true' },
+                    '\xD7'
+                  )
+                ),
+                _react2.default.createElement(
+                  'h4',
+                  { className: 'modal-title', id: 'myModalLabel' },
+                  '\u4FEE\u6539\u8BFE\u7A0B'
+                )
+              ),
+              _react2.default.createElement(
+                'div',
+                { className: 'modal-body', style: { 'padding': '60px 0px 30px' } },
+                _react2.default.createElement(_inputNewClass2.default, {
+                  userName: userName,
+                  studentName: this.state.studentName,
+                  progress: this.state.progress,
+                  date: this.state.date,
+                  id: this.state.id,
+                  fetchRead: this.fetchRead
+                })
+              )
+            )
+          )
+        )
+      );
+    }
+  }]);
+
+  return TableDetail;
+}(_react2.default.Component);
+
+_reactDom2.default.render(_react2.default.createElement(
+  'div',
+  null,
+  _react2.default.createElement(_header2.default, null),
+  _react2.default.createElement(_welcome2.default, { userName: userName }),
+  _react2.default.createElement(TableDetail, { userName: userName })
+), document.getElementById('root'));
+
+/***/ }),
+/* 187 */,
+/* 188 */,
+/* 189 */,
+/* 190 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = __webpack_require__(24);
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var InputNewClass = function (_Component) {
+    _inherits(InputNewClass, _Component);
+
+    function InputNewClass(props) {
+        _classCallCheck(this, InputNewClass);
+
+        var _this = _possibleConstructorReturn(this, (InputNewClass.__proto__ || Object.getPrototypeOf(InputNewClass)).call(this, props));
 
         _this.state = {
-            studentsList: []
+            insertData: false,
+            nullName: true,
+            submit: false
         };
+        _this.submitData = {};
+
+        _this.submitClass = _this.submitClass.bind(_this);
         return _this;
     }
 
-    _createClass(TableDetail, [{
-        key: 'componentDidMount',
-        value: function componentDidMount() {
-            this.fetchDetail(this.props.userName);
+    _createClass(InputNewClass, [{
+        key: 'componentDidUpdate',
+        value: function componentDidUpdate() {
+            $('#name').val(this.props.studentName);
+            $('#progress').val(this.props.progress);
         }
     }, {
-        key: 'fetchDetail',
-        value: function fetchDetail(userName) {
+        key: 'submitClass',
+        value: function submitClass() {
+            var name = $('#name').val();
+            var progress = $('#progress').val();
+            if (name === '') {
+                this.setState({
+                    submit: true
+                });
+                var t = setTimeout(function () {
+                    this.setState({ submit: false });
+                }.bind(this), 1000);
+                return false;
+            }
+            var submitData = {
+                id: this.props.id,
+                name: name,
+                progress: progress,
+                date: this.props.date || new Date(),
+                userName: this.props.userName
+            };
+
             $.ajax({
                 type: 'POST',
-                url: '/api/getdetail',
+                url: '/api/addclass',
                 async: true,
-                contentType: "application/json;charset=utf-8",
-                data: JSON.stringify({ 'userName': userName }),
+                contentType: 'application/json;chartset=utf-8',
+                data: JSON.stringify(submitData),
                 dataType: 'json',
                 success: function (data) {
-                    if (data && data.length !== 0) {
-                        this.setState({
-                            studentsList: data
-                        });
-                    } else {}
+                    console.log(data);
+                    if (this.props.id) {
+                        $('.close').click();
+                        // 从后台重新获取数据
+                        this.props.fetchRead(this.props.userName);
+                    }
+
+                    data && data.length !== 0 && this.setState({ insertData: true, submit: false });
+                    $('#name').val('');
+                    $('#progress').val('');
+                    var t = setTimeout(function () {
+                        this.setState({ insertData: false });
+                    }.bind(this), 1000);
                 }.bind(this)
             });
         }
     }, {
         key: 'render',
         value: function render() {
-            return _react2.default.createElement(
+            return React.createElement(
                 'div',
-                { className: 'container' },
-                _react2.default.createElement(
-                    'table',
-                    { className: 'table table-bordered table-striped' },
-                    _react2.default.createElement(
-                        'thead',
-                        null,
-                        _react2.default.createElement(
-                            'tr',
-                            null,
-                            _react2.default.createElement(
-                                'td',
-                                null,
-                                '#'
+                null,
+                this.state.insertData && React.createElement(
+                    'div',
+                    {
+                        className: 'alert alert-success',
+                        role: 'alert',
+                        style: { 'textAlign': 'center', 'position': 'fixed', 'left': '0', 'top': '52px', 'width': '100%' }
+                    },
+                    '\u63D2\u5165\u6210\u529F\uFF01'
+                ),
+                this.state.submit && this.state.nullName && React.createElement(
+                    'div',
+                    {
+                        className: 'alert alert-danger',
+                        role: 'alert',
+                        style: { 'textAlign': 'center', 'position': 'fixed', 'left': '0', 'top': '52px', 'width': '100%' }
+                    },
+                    '\u5B66\u751F\u59D3\u540D\u4E0D\u80FD\u4E3A\u7A7A\uFF01'
+                ),
+                React.createElement(
+                    'div',
+                    { className: 'container', style: { 'width': '100%' } },
+                    React.createElement(
+                        'form',
+                        { className: 'form-horizontal' },
+                        React.createElement(
+                            'div',
+                            { className: 'form-group' },
+                            React.createElement(
+                                'label',
+                                { htmlFor: 'name', className: 'col-sm-2 control-label' },
+                                '\u5B66\u751F\u59D3\u540D\uFF1A'
                             ),
-                            _react2.default.createElement(
-                                'td',
-                                null,
-                                '\u5B66\u751F\u59D3\u540D'
+                            React.createElement(
+                                'div',
+                                { className: 'col-sm-10', style: { 'color': '#a94442' } },
+                                React.createElement('input', { type: 'name', className: 'form-control', id: 'name', placeholder: '\u8BF7\u8F93\u5165\u5B66\u751F\u59D3\u540D' })
+                            )
+                        ),
+                        React.createElement(
+                            'div',
+                            { className: 'form-group' },
+                            React.createElement(
+                                'label',
+                                { htmlFor: 'progress', className: 'col-sm-2 control-label' },
+                                '\u8BFE\u7A0B\u8FDB\u5EA6\uFF1A'
                             ),
-                            _react2.default.createElement(
-                                'td',
-                                null,
-                                '\u4E0A\u8BFE\u65E5\u671F'
-                            ),
-                            _react2.default.createElement(
-                                'td',
-                                null,
-                                '\u8BFE\u7A0B\u8FDB\u5EA6'
+                            React.createElement(
+                                'div',
+                                { className: 'col-sm-10' },
+                                React.createElement('input', { type: 'text', className: 'form-control', id: 'progress', placeholder: '\u8BF7\u8F93\u5165\u8BFE\u7A0B\u8FDB\u5EA6' })
+                            )
+                        ),
+                        React.createElement(
+                            'div',
+                            { className: 'form-group' },
+                            React.createElement(
+                                'div',
+                                { className: 'col-sm-10 col-sm-offset-2' },
+                                React.createElement(
+                                    'button',
+                                    { type: 'button', className: 'btn btn-success btn-lg btn-block', onClick: this.submitClass },
+                                    'Submit'
+                                )
                             )
                         )
-                    ),
-                    _react2.default.createElement(
-                        'tbody',
-                        null,
-                        this.state.studentsList && this.state.studentsList.map(function (item, key) {
-                            return _react2.default.createElement(
-                                'tr',
-                                { key: key },
-                                _react2.default.createElement(
-                                    'td',
-                                    null,
-                                    key
-                                ),
-                                _react2.default.createElement(
-                                    'td',
-                                    null,
-                                    item.name
-                                ),
-                                _react2.default.createElement(
-                                    'td',
-                                    null,
-                                    (0, _utils.format)(item.date)
-                                ),
-                                _react2.default.createElement(
-                                    'td',
-                                    null,
-                                    item.progress
-                                )
-                            );
-                        })
                     )
                 )
             );
         }
     }]);
 
-    return TableDetail;
-}(_react2.default.Component);
+    return InputNewClass;
+}(_react.Component);
 
-_reactDom2.default.render(_react2.default.createElement(
-    'div',
-    null,
-    _react2.default.createElement(_header2.default, null),
-    _react2.default.createElement(_welcome2.default, { userName: userName }),
-    _react2.default.createElement(TableDetail, { userName: userName })
-), document.getElementById('root'));
+exports.default = InputNewClass;
 
 /***/ })
 /******/ ]);

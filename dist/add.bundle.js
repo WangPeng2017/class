@@ -809,11 +809,11 @@ function isNative(fn) {
   var hasOwnProperty = Object.prototype.hasOwnProperty;
   var reIsNative = RegExp('^' + funcToString
   // Take an example native function source for comparison
-  .call(hasOwnProperty)
+  .call(hasOwnProperty
   // Strip regex characters so we can use it for regex
-  .replace(/[\\^$.*+?()[\]{}|]/g, '\\$&')
+  ).replace(/[\\^$.*+?()[\]{}|]/g, '\\$&'
   // Remove hasOwnProperty from the template to make it generic
-  .replace(/hasOwnProperty|(function).*?(?=\\\()| for .+?(?=\\\])/g, '$1.*?') + '$');
+  ).replace(/hasOwnProperty|(function).*?(?=\\\()| for .+?(?=\\\])/g, '$1.*?') + '$');
   try {
     var source = funcToString.call(fn);
     return reIsNative.test(source);
@@ -22161,8 +22161,6 @@ module.exports = getNextDebugID;
 "use strict";
 
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
 var _react = __webpack_require__(24);
 
 var _reactDom = __webpack_require__(96);
@@ -22173,15 +22171,46 @@ var _header = __webpack_require__(95);
 
 var _header2 = _interopRequireDefault(_header);
 
+var _inputNewClass = __webpack_require__(190);
+
+var _inputNewClass2 = _interopRequireDefault(_inputNewClass);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var userName = userInfo.name;
+
+_reactDom2.default.render(React.createElement(
+    'div',
+    null,
+    React.createElement(_header2.default, null),
+    React.createElement('div', { style: { marginBottom: '100px' } }),
+    React.createElement(_inputNewClass2.default, { userName: userName })
+), document.getElementById('root'));
+
+/***/ }),
+/* 186 */,
+/* 187 */,
+/* 188 */,
+/* 189 */,
+/* 190 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = __webpack_require__(24);
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var userName = userInfo.name;
 
 var InputNewClass = function (_Component) {
     _inherits(InputNewClass, _Component);
@@ -22193,32 +22222,20 @@ var InputNewClass = function (_Component) {
 
         _this.state = {
             insertData: false,
-            name: '',
-            progress: ''
+            nullName: true,
+            submit: false
         };
         _this.submitData = {};
 
         _this.submitClass = _this.submitClass.bind(_this);
-        _this.changeName = _this.changeName.bind(_this);
-        _this.changeProgress = _this.changeProgress.bind(_this);
         return _this;
     }
 
     _createClass(InputNewClass, [{
-        key: 'changeName',
-        value: function changeName(event) {
-            var value = event.target.value;
-            this.setState({
-                name: value
-            });
-        }
-    }, {
-        key: 'changeProgress',
-        value: function changeProgress(event) {
-            var value = event.target.value;
-            this.setState({
-                progress: value
-            });
+        key: 'componentDidUpdate',
+        value: function componentDidUpdate() {
+            $('#name').val(this.props.studentName);
+            $('#progress').val(this.props.progress);
         }
     }, {
         key: 'submitClass',
@@ -22226,14 +22243,22 @@ var InputNewClass = function (_Component) {
             var name = $('#name').val();
             var progress = $('#progress').val();
             if (name === '') {
+                this.setState({
+                    submit: true
+                });
+                var t = setTimeout(function () {
+                    this.setState({ submit: false });
+                }.bind(this), 1000);
                 return false;
             }
             var submitData = {
-                name: this.state.name,
-                progress: this.state.progress,
-                date: new Date(),
+                id: this.props.id,
+                name: name,
+                progress: progress,
+                date: this.props.date || new Date(),
                 userName: this.props.userName
             };
+
             $.ajax({
                 type: 'POST',
                 url: '/api/addclass',
@@ -22243,11 +22268,17 @@ var InputNewClass = function (_Component) {
                 dataType: 'json',
                 success: function (data) {
                     console.log(data);
-                    data && data.length !== 0 && this.setState({ insertData: true });
+                    if (this.props.id) {
+                        $('.close').click();
+                        // 从后台重新获取数据
+                        this.props.fetchRead(this.props.userName);
+                    }
+
+                    data && data.length !== 0 && this.setState({ insertData: true, submit: false });
                     $('#name').val('');
                     $('#progress').val('');
                     var t = setTimeout(function () {
-                        this.setState({ insertData: false, name: '', progress: '' });
+                        this.setState({ insertData: false });
                     }.bind(this), 1000);
                 }.bind(this)
             });
@@ -22260,12 +22291,25 @@ var InputNewClass = function (_Component) {
                 null,
                 this.state.insertData && React.createElement(
                     'div',
-                    { className: 'alert alert-success', role: 'alert', style: { 'textAlign': 'center', 'position': 'fixed', 'width': '100%' } },
+                    {
+                        className: 'alert alert-success',
+                        role: 'alert',
+                        style: { 'textAlign': 'center', 'position': 'fixed', 'left': '0', 'top': '52px', 'width': '100%' }
+                    },
                     '\u63D2\u5165\u6210\u529F\uFF01'
+                ),
+                this.state.submit && this.state.nullName && React.createElement(
+                    'div',
+                    {
+                        className: 'alert alert-danger',
+                        role: 'alert',
+                        style: { 'textAlign': 'center', 'position': 'fixed', 'left': '0', 'top': '52px', 'width': '100%' }
+                    },
+                    '\u5B66\u751F\u59D3\u540D\u4E0D\u80FD\u4E3A\u7A7A\uFF01'
                 ),
                 React.createElement(
                     'div',
-                    { className: 'container', style: { 'top': '100px', 'position': 'relative', 'width': '100%' } },
+                    { className: 'container', style: { 'width': '100%' } },
                     React.createElement(
                         'form',
                         { className: 'form-horizontal' },
@@ -22280,7 +22324,7 @@ var InputNewClass = function (_Component) {
                             React.createElement(
                                 'div',
                                 { className: 'col-sm-10', style: { 'color': '#a94442' } },
-                                React.createElement('input', { type: 'name', className: 'form-control', id: 'name', placeholder: '\u8BF7\u8F93\u5165\u5B66\u751F\u59D3\u540D', onChange: this.changeName })
+                                React.createElement('input', { type: 'name', className: 'form-control', id: 'name', placeholder: '\u8BF7\u8F93\u5165\u5B66\u751F\u59D3\u540D' })
                             )
                         ),
                         React.createElement(
@@ -22294,7 +22338,7 @@ var InputNewClass = function (_Component) {
                             React.createElement(
                                 'div',
                                 { className: 'col-sm-10' },
-                                React.createElement('input', { type: 'text', className: 'form-control', id: 'progress', placeholder: '\u8BF7\u8F93\u5165\u8BFE\u7A0B\u8FDB\u5EA6', onChange: this.changeProgress })
+                                React.createElement('input', { type: 'text', className: 'form-control', id: 'progress', placeholder: '\u8BF7\u8F93\u5165\u8BFE\u7A0B\u8FDB\u5EA6' })
                             )
                         ),
                         React.createElement(
@@ -22305,7 +22349,7 @@ var InputNewClass = function (_Component) {
                                 { className: 'col-sm-10 col-sm-offset-2' },
                                 React.createElement(
                                     'button',
-                                    { type: 'button', className: 'btn btn-success btn-lg btn-block', disabled: this.state.name === '' && 'true', onClick: this.submitClass },
+                                    { type: 'button', className: 'btn btn-success btn-lg btn-block', onClick: this.submitClass },
                                     'Submit'
                                 )
                             )
@@ -22319,12 +22363,7 @@ var InputNewClass = function (_Component) {
     return InputNewClass;
 }(_react.Component);
 
-_reactDom2.default.render(React.createElement(
-    'div',
-    null,
-    React.createElement(_header2.default, null),
-    React.createElement(InputNewClass, { userName: userName })
-), document.getElementById('root'));
+exports.default = InputNewClass;
 
 /***/ })
 /******/ ]);

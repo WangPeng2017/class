@@ -1,7 +1,7 @@
 var mongoose = require('mongoose');
 
 var serverConf = require('../serverConfig');
-var dbUrl = serverConf.prdConfig.DB_URL;
+var dbUrl = serverConf.devConfig.DB_URL;
 
 const db = mongoose.connect(dbUrl).connection;
 
